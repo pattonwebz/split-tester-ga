@@ -1,6 +1,6 @@
 {
   "name": "@pattonwebz/split-tester-client",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Client-side JavaScript split testing engine with GA4 event support.",
   "license": "MIT",
   "type": "module",
@@ -9,7 +9,8 @@
   },
   "exports": {
     ".": "./src/index.js",
-    "./ga4": "./src/analytics/ga4.js"
+    "./ga4": "./src/analytics/ga4.js",
+    "./runtime": "./src/runtime/index.js"
   },
   "files": [
     "src"

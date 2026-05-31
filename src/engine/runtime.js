@@ -82,6 +82,10 @@ export function createEngine(options = {}) {
     return experiments;
   }
 
+  function listExperiments() {
+    return [...experiments];
+  }
+
   if (options.experiments?.length) {
     registerExperiments(options.experiments);
   }
@@ -261,6 +265,7 @@ export function createEngine(options = {}) {
 
   return {
     registerExperiments,
+    listExperiments,
     getActiveExperimentsForPage,
     getVariant,
     trackEvent,

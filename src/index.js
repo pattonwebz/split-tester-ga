@@ -1,5 +1,6 @@
 export { defineExperiments } from "./engine/contract.js";
 export { createEngine } from "./engine/runtime.js";
+export { createRuntime, getRuntime, installRuntime } from "./runtime/index.js";
 export {
   buildGa4ConversionPayload,
   buildGa4EventPayload,

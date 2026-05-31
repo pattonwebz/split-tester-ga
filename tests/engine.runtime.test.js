@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import { createEngine } from "../src/engine/runtime.js";
+import { createRuntime, installRuntime } from "../src/runtime/index.js";
 
 function createStorage() {
   const entries = new Map();
@@ -212,4 +213,52 @@ test("accepts goals with multi-event mapping", () => {
   });
 
   assert.equal(typeof engine.getVariant("signup-flow"), "string");
+});
+
+test("defines experiments lazily through callback syntax", () => {
+  const runtime = createRuntime({
+    getUserContext: () => ({ url: { pathname: "/signup" }, user: { id: "user-1" } })
+  });
+
+  const configs = runtime.define(({ context }) => ({
+    id: "signup-copy",
+    status: "active",
+    variants: [
+      { id: "control", weight: 50 },
+      { id: "short-copy", weight: 50 }
+    ],
+    variantRules: [
+      {
+        when: ({ events }) => events.includes("viewed_pricing") || context.url.pathname === "/signup",
+        variant: "short-copy"
+      }
+    ]
+  }));
+
+  assert.equal(configs.length, 1);
+  assert.equal(typeof runtime.getVariant("signup-copy"), "string");
+});
+
+test("installs a singleton runtime and queue alias on a scope", () => {
+  const scope = {};
+  const runtime = installRuntime(
+    {
+      getUserContext: () => ({ url: { pathname: "/" }, user: { id: "user-2" } })
+    },
+    scope
+  );
+
+  assert.equal(scope.splitTester, runtime);
+  assert.equal(typeof scope.splitTesterQueue.push, "function");
+
+  scope.splitTesterQueue.push(() => ({
+    id: "queue-test",
+    status: "active",
+    variants: [
+      { id: "control", weight: 50 },
+      { id: "variant", weight: 50 }
+    ]
+  }));
+
+  assert.equal(typeof scope.splitTester.getVariant("queue-test"), "string");
 });
