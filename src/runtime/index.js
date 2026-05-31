@@ -21,20 +21,9 @@ function normalizeDefinitions(definition, runtime) {
 }
 
 function createQueue(runtime) {
-  const queue = [];
-
   return {
     push(definition) {
-      queue.push(definition);
       return runtime.define(definition);
-    },
-    drain() {
-      while (queue.length > 0) {
-        runtime.define(queue.shift());
-      }
-    },
-    length() {
-      return queue.length;
     }
   };
 }

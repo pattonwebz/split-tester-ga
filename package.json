@@ -26,6 +26,10 @@
     "analytics"
   ],
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "test:jest": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand --config jest.config.js"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }
